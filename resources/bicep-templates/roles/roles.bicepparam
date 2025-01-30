@@ -49,5 +49,3 @@ param roles = [
     notDataActions: []
   }
 ]
-
-// az deployment group create --name ExampleDeployment --resource-group ExampleGroup --parameters storage.bicepparam
