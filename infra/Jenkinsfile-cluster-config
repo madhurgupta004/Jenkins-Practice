@@ -1,0 +1,41 @@
+pipeline{
+    agent any
+    stages {
+        stage('Login to Azure') {
+            steps {
+                script {
+                    withCredentials([azureServicePrincipal(
+                        credentialsId:'JENKINS_SERVICE_PRINCIPAL',
+                        clientIdVariable: 'AZURE_CLIENT_ID',
+                        clientSecretVariable: 'AZURE_CLIENT_SECRET',
+                        tenantIdVariable: 'AZURE_TENANT_ID'
+                        )]){
+                        sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
+                    }
+                }
+            }
+        }
+        stage('Create users'){
+            steps{
+                script{
+                    def users = ['Tony', 'Peter' , 'Steve']
+                    for (int i = 0; i < users.size(); i++) {
+                        sh '''
+                            az ad user create 
+                            --display-name ${users[i]} 
+                            --password "DevPlatters@123" 
+                            --user-principal-name "${users[i]}@madhurgupta004gmail.onmicrosoft.com" --force-change-password-next-login false
+                        '''
+                    }
+                }
+            }
+        }
+        stage("Logout from Azure"){
+            steps{
+                script{
+                    sh "az logout"
+                }
+            }
+        }
+    }
+}
