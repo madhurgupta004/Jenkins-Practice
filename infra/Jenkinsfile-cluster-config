@@ -1,30 +1,50 @@
 pipeline{
     agent any
+    parameters {
+        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed'),
+        // string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)'),
+        // string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)'),
+        // string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)'),
+    }
+    environment{
+        ROLE_BICEPPARAM_TEMPLATE_PATH: 'resources/bicep-templates/roles/roles.bicepparam',
+    }
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/madhurgupta004/Jenkins-Practice.git'
+            }
+        }
         stage('Login to Azure') {
             steps {
                 script {
                     withCredentials([azureServicePrincipal(
                         credentialsId:'JENKINS_SERVICE_PRINCIPAL',
+                        subscriptionIdVariable: 'AZURE_SUBSCRIPTION_ID',
                         clientIdVariable: 'AZURE_CLIENT_ID',
                         clientSecretVariable: 'AZURE_CLIENT_SECRET',
                         tenantIdVariable: 'AZURE_TENANT_ID'
                         )]){
                         sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
+                        sh "az account set --subscription $AZURE_SUBSCRIPTION_ID"
                     }
                 }
             }
         }
-        stage('Create users'){
+        stage('Create roles'){
             steps{
                 script{
-                    def users = ['Tony', 'Peter' , 'Steve']
-                    for (int i = 0; i < users.size(); i++) {
-                        sh "az ad user create --display-name '${users[i]}' --password DevPlatters@123 --user-principal-name '${users[i]}@madhurgupta004gmail.onmicrosoft.com' --force-change-password-next-sign-in  false"
-                    }
+                    sh "az deployment sub create --location '${DEPLOYMENT_REGION}' --parameters '${ROLE_BICEPPARAM_TEMPLATE_PATH}' "
                 }
             }
         }
+        // stage('Create role assignments'){
+        //     steps{
+        //         script{
+                    
+        //         }
+        //     }
+        // }
         stage("Logout from Azure"){
             steps{
                 script{

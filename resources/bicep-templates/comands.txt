@@ -1,0 +1,1 @@
+az ad user create --display-name tony --password DevPlatters@123 --user-principal-name tony@madhurgupta004gmail.onmicrosoft.com --force-change-password-next-sign-in  false

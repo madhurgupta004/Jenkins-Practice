@@ -22,26 +22,26 @@ targetScope = 'subscription'
 // @description('Detailed description of the role definition')
 // param roleDescription string = 'Subscription Level Custom Cluster Admin Role'
 
-module roleCreationModule './create-role.bicep' = {
-  name: 'roleDeploy'
-  params: {
-    roleName: 'Custom Cluster Admin'
-    roleDescription: 'Subscription Level Custom Cluster Admin Role'
-    actions: [
-      'Microsoft.Authorization/*/read'
-      'Microsoft.Resources/subscriptions/operationresults/read'
-      'Microsoft.Resources/subscriptions/read'
-      'Microsoft.Resources/subscriptions/resourceGroups/read'
-      'Microsoft.ContainerService/managedClusters/listClusterUserCredential/action'
-    ]
-    notActions: []
-    dataActions: [
-      'Microsoft.ContainerService/managedClusters/*'
-    ]
-    notDataActions: []
-  }
-}
-output roleDefinitionId string = roleCreationModule.outputs.roleDefinitionId
+// module roleCreationModule './create-role.bicep' = {
+//   name: 'roleDeploy'
+//   params: {
+//     roleName: 'Custom Cluster Admin'
+//     roleDescription: 'Subscription Level Custom Cluster Admin Role'
+//     actions: [
+//       'Microsoft.Authorization/*/read'
+//       'Microsoft.Resources/subscriptions/operationresults/read'
+//       'Microsoft.Resources/subscriptions/read'
+//       'Microsoft.Resources/subscriptions/resourceGroups/read'
+//       'Microsoft.ContainerService/managedClusters/listClusterUserCredential/action'
+//     ]
+//     notActions: []
+//     dataActions: [
+//       'Microsoft.ContainerService/managedClusters/*'
+//     ]
+//     notDataActions: []
+//   }
+// }
+// output roleDefinitionId string = roleCreationModule.outputs.roleDefinitionId
 
 // az deployment group create --resource-group roles-rg --template-file 
 // az group create --name roles-rg --location eastus
