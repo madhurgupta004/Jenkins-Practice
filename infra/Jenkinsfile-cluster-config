@@ -21,10 +21,7 @@ pipeline{
                     def users = ['Tony', 'Peter' , 'Steve']
                     for (int i = 0; i < users.size(); i++) {
                         sh '''
-                            az ad user create 
-                            --display-name ${users[i]} 
-                            --password "DevPlatters@123" 
-                            --user-principal-name "${users[i]}@madhurgupta004gmail.onmicrosoft.com" --force-change-password-next-login false
+                            az ad user create --display-name ${users[i]} --password "DevPlatters@123" --user-principal-name "${users[i]}@madhurgupta004gmail.onmicrosoft.com" --force-change-password-next-login false
                         '''
                     }
                 }
