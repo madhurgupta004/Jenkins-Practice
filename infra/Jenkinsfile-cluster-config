@@ -34,18 +34,18 @@ pipeline{
                 }
             }
         }
-        stage('Create roles'){
-            steps{
-                script{
-                    sh """
-                    az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
-                        --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
-                        --name "${params.ROLES_DEPLOYMENT_NAME}" \
-                    """
-                }
-            }
-        }
+        // stage('Create roles'){
+        //     steps{
+        //         script{
+        //             sh """
+        //             az deployment sub create \
+        //                 --location "${params.DEPLOYMENT_REGION}" \
+        //                 --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+        //                 --name "${params.ROLES_DEPLOYMENT_NAME}" \
+        //             """
+        //         }
+        //     }
+        // }
         stage('Get role definition ids'){
             steps{
                 script{
@@ -54,7 +54,7 @@ pipeline{
                     //     script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
                     //     returnStdout: true
                     // ).trim()
-                    def temp = "Hello World"\
+                    def temp = "Hello World"
                     echo ${temp}
                 }
             }
