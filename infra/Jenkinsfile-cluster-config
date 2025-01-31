@@ -52,9 +52,9 @@ pipeline{
                     echo "Getting role definition ids"
                     sh """ 
                     ids=\$(az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value) \
+                    echo \$ids \
                     """
-                    def roleDefinitionIds = $ids
-                    echo "Success"
+                    // def roleDefinitionIds = $ids
                 }
             }
         }
