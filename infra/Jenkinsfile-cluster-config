@@ -45,7 +45,7 @@ pipeline{
                         --output json
                     ''', returnStdout: true).trim()
 
-                    echo ${deploymentOutput}
+                    sh "echo ${deploymentOutput}"
 
                     // def outputs = readJSON text: deploymentOutput
                     // env.ROLE_DEFINITION_ID_1 = outputs.roleDefinitionId[0].value
@@ -59,6 +59,7 @@ pipeline{
                 script{
                     // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
                     // def roleDefinitionIds = []
+                    sh "echo Hello"
                 }
             }
         }
@@ -69,7 +70,9 @@ pipeline{
                 }
             }
         }
-        post {
+        
+    }
+    post {
         success {
             echo 'Bicep deployment completed successfully!'
         }
@@ -77,5 +80,4 @@ pipeline{
             echo 'Bicep deployment failed. Check the logs for details.'
         }
         }
-    }
 }
