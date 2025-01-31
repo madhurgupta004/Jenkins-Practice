@@ -55,7 +55,7 @@ pipeline{
                         returnStdout: true
                     ).trim()
 
-                    env.roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
+                    def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
                     sh "echo ${roleDefinitionIds}"
                     sh "echo ${roleDefinitionIds[0]}"
