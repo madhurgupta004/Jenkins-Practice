@@ -46,7 +46,7 @@ pipeline{
         //         }
         //     }
         // }
-        stage('Get role definition ids'){
+        stage('Getting role definition ids'){
             steps{
                 script{
                     echo "Getting role definition ids"
@@ -55,9 +55,12 @@ pipeline{
                         returnStdout: true
                     ).trim()
                     
+                    sh "echo role defs fetched"
                     def roleDefId1 = roleDefinitionIds[0].roleDefinitionId
                     def roleDefId2 = roleDefinitionIds[1].roleDefinitionId
                     def roleDefId3 = roleDefinitionIds[2].roleDefinitionId
+
+                    sh "echo role defs assigned"
 
                     sh "echo  ${roleDefId1}"
                     sh "echo  ${roleDefId2}"
