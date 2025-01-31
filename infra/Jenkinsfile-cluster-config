@@ -98,12 +98,13 @@ pipeline{
                             roleId "${env.roleDefinitionIds[2]}"
                         }
                     }
+                    def jsonString = userRoleObjects.toPrettyString()
                     sh """
                     az deployment sub create \
                         --location "${params.DEPLOYMENT_REGION}" \ 
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
                         --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters userRoleObjects=${userRoleObjects}  \
+                        --parameters userRoleObjects=${jsonString}  \
                     """
 
                     sh "echo role assignments created"
