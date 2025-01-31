@@ -37,13 +37,13 @@ pipeline{
         stage('Create roles'){
             steps{
                 script{
-                    def deploymentOutput = sh(script: '''
+                    def deploymentOutput = sh(script: """
                     az deployment sub create \
-                        --location "\${params.DEPLOYMENT_REGION}" \
-                        --parameters "\${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+                        --location "${params.DEPLOYMENT_REGION}" \
+                        --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
                         --query "properties.outputs" \
                         --output json
-                    ''', returnStdout: true).trim()
+                    """, returnStdout: true).trim()
 
                     sh "echo ${deploymentOutput}"
 
