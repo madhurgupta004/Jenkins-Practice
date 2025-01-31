@@ -58,29 +58,7 @@ pipeline{
                     def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
                     sh "echo ${roleDefinitionIds}"
-                    sh "echo ${roleDefinitionIds[0]}"
-                }
-            }
-        }
-        stage('Create role assignments'){
-            steps{
-                script{
-                    // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
 
-                    // def userRoleObjects = [
-                    //     {
-                    //         "userId" : "${params.READ_ONLY_USER_ID}",
-                    //         "roleId" : "${env.roleDefinitionIds[0]}"
-                    //     },
-                    //     {
-                    //         "userId" : "${params.READ_AND_EDIT_USER_ID}",
-                    //         "roleId" : "${env.roleDefinitionIds[1]}"
-                    //     },
-                    //     {
-                    //         "userId" : "${params.READ_AND_DELETE_USER_ID}",
-                    //         "roleId" : "${env.roleDefinitionIds[2]}"
-                    //     }
-                    // ]
                     sh """
                     az deployment sub create \
                         --location "${params.DEPLOYMENT_REGION}" \
@@ -90,9 +68,41 @@ pipeline{
                     """
 
                     sh "echo role assignments created"
+
                 }
             }
         }
+        // stage('Create role assignments'){
+        //     steps{
+        //         script{
+        //             // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
+
+        //             // def userRoleObjects = [
+        //             //     {
+        //             //         "userId" : "${params.READ_ONLY_USER_ID}",
+        //             //         "roleId" : "${env.roleDefinitionIds[0]}"
+        //             //     },
+        //             //     {
+        //             //         "userId" : "${params.READ_AND_EDIT_USER_ID}",
+        //             //         "roleId" : "${env.roleDefinitionIds[1]}"
+        //             //     },
+        //             //     {
+        //             //         "userId" : "${params.READ_AND_DELETE_USER_ID}",
+        //             //         "roleId" : "${env.roleDefinitionIds[2]}"
+        //             //     }
+        //             // ]
+        //             sh """
+        //             az deployment sub create \
+        //                 --location "${params.DEPLOYMENT_REGION}" \
+        //                 --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
+        //                 --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
+        //                 --parameters userRoleObjects=[{"userId" : "${params.READ_ONLY_USER_ID}","roleId" : "${env.roleDefinitionIds[0]}"},{"userId" : "${params.READ_AND_EDIT_USER_ID}","roleId" : "${env.roleDefinitionIds[1]}"},{"userId" : "${params.READ_AND_DELETE_USER_ID}","roleId" : "${env.roleDefinitionIds[2]}"}] \
+        //             """
+
+        //             sh "echo role assignments created"
+        //         }
+        //     }
+        // }
         stage("Logout from Azure"){
             steps{
                 script{
