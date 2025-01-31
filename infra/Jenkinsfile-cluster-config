@@ -49,6 +49,7 @@ pipeline{
         stage('Fetching role definition ids'){
             steps{
                 script{
+                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
                     echo "Getting role definition ids"
                     def roleDefinitionIdsJSON = sh (
                         script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
@@ -64,7 +65,7 @@ pipeline{
                         --location "${params.DEPLOYMENT_REGION}" \
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
                         --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters userRoleObjects=[{"userId" : "${params.READ_ONLY_USER_ID}","roleId" : "${env.roleDefinitionIds[0]}"},{"userId" : "${params.READ_AND_EDIT_USER_ID}","roleId" : "${env.roleDefinitionIds[1]}"},{"userId" : "${params.READ_AND_DELETE_USER_ID}","roleId" : "${env.roleDefinitionIds[2]}"}] \
+                        --parameters userPrincipalIds=${userIds} roleDefinitionIds=${roleDefinitionIds}
                     """
 
                     sh "echo role assignments created"
