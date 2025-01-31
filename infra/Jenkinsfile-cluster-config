@@ -1,11 +1,11 @@
 pipeline{
     agent any
     parameters {
-        string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments'),
-        string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles'),
-        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed'),
-        string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)'),
-        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)'),
+        string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments')
+        string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles')
+        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed')
+        string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)')
+        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)')
         string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
     }
     environment{
