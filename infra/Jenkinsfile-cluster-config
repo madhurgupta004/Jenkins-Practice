@@ -1,13 +1,16 @@
 pipeline{
     agent any
     parameters {
-        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed')
-        // string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)'),
-        // string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)'),
-        // string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)'),
+        string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments'),
+        string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles'),
+        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed'),
+        string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)'),
+        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)'),
+        string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
     }
     environment{
-        ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
+        ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam',
+        ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/role-assignments.bicepparam'
     }
     stages {
         stage('Checkout') {
@@ -27,30 +30,52 @@ pipeline{
                         )]){
                         sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
                         sh "az account set --subscription $AZURE_SUBSCRIPTION_ID"
-                    }
+                        }
                 }
             }
         }
         stage('Create roles'){
             steps{
                 script{
-                    sh "az deployment sub create --location '${params.DEPLOYMENT_REGION}' --parameters '${ROLE_BICEPPARAM_TEMPLATE_PATH}' "
+                    def deploymentOutput = sh(script: '''
+                    az deployment sub create \
+                        --location '${params.DEPLOYMENT_REGION}' \
+                        --parameters '${ROLE_BICEPPARAM_TEMPLATE_PATH}' \
+                        --query "properties.outputs" \
+                        --output json
+                    ''', returnStdout: true).trim()
+
+                    echo ${deploymentOutput}
+
+                    // def outputs = readJSON text: deploymentOutput
+                    // env.ROLE_DEFINITION_ID_1 = outputs.roleDefinitionId[0].value
+                    // env.ROLE_DEFINITION_ID_2 = outputs.roleDefinitionId[1].value
+                    // env.ROLE_DEFINITION_ID_3 = outputs.roleDefinitionId[2].value
                 }
             }
         }
-        // stage('Create role assignments'){
-        //     steps{
-        //         script{
-                    
-        //         }
-        //     }
-        // }
+        stage('Create role assignments'){
+            steps{
+                script{
+                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
+                    def roleDefinitionIds = []
+                }
+            }
+        }
         stage("Logout from Azure"){
             steps{
                 script{
                     sh "az logout"
                 }
             }
+        }
+        post {
+        success {
+            echo 'Bicep deployment completed successfully!'
+        }
+        failure {
+            echo 'Bicep deployment failed. Check the logs for details.'
+        }
         }
     }
 }

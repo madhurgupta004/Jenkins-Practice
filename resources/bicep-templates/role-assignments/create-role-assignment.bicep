@@ -1,19 +1,23 @@
 targetScope = 'subscription'
 
-@description('PrincipalId of the user')
-param userPrincipalId string
+@description('PrincipalIds of the user')
+param userPrincipalIds array
 
-@description('Role Definition Id of the role to be assigned')
-param roleDefinitionId string
+// param roleAssignementObjects array
 
-var roleAssignmentName = guid(subscription().id, userPrincipalId, roleDefinitionId)
+@description('Role Definition Ids of the roles to be assigned')
+param roleDefinitionIds array
 
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
-  name: roleAssignmentName
-  properties: {
-    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionId)
-    principalId: userPrincipalId
+// var roleAssignmentName = guid(subscription().id, userPrincipalId, roleDefinitionId)
+
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = [
+  for i in range(0, length(userPrincipalIds)): {
+    name: guid(subscription().id, userPrincipalIds[i], roleDefinitionIds[i])
+    properties: {
+      roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roleDefinitionIds[i])
+      principalId: userPrincipalIds[i]
+    }
   }
-}
+]
 
-output principalId string = roleAssignment.name
+output roleAssignmentIds array = [for i in range(0, length(userPrincipalIds)): roleAssignment[i].name]
