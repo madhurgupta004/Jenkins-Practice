@@ -10,7 +10,7 @@ pipeline{
     }
     environment{
         ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
-        ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/role-assignments.bicepparam'
+        ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/create-role-assignment.bicep'
     }
     stages {
         stage('Checkout') {
@@ -46,36 +46,25 @@ pipeline{
         //         }
         //     }
         // }
-        stage('Getting role definition ids'){
+        stage('Fetching role definition ids'){
             steps{
                 script{
                     echo "Getting role definition ids"
-                    def roleDefinitionIds = sh (
+                    def roleDefinitionIdsJSON = sh (
                         script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
                         returnStdout: true
                     ).trim()
-                    
+
+                    def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
-
-                    def ids = readJSON text: roleDefinitionIds
-                    def roleDefId1 = ids[0]
-                    def roleDefId2 = ids[1]
-                    def roleDefId3 = ids[2]
-                    sh "echo role defs assigned"
-
-                    sh "echo  ${ids}"
-                    sh "echo  ${roleDefId1}"
-                    sh "echo  ${roleDefId2}"
-                    sh "echo  ${roleDefId3}"
                 }
             }
         }
         stage('Create role assignments'){
             steps{
                 script{
-                    // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
-                    // def roleDefinitionIds = []
-                    sh "echo Hello"
+                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
+                    
                 }
             }
         }
