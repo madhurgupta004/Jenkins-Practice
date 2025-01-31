@@ -49,10 +49,11 @@ pipeline{
         stage('Get role definition ids'){
             steps{
                 script{
+                    echo "Getting role definition ids"
                     sh """ 
                     ids=\$(az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value) \
-                    echo $ids \
                     """
+                    echo "$ids"
                 }
             }
         }
