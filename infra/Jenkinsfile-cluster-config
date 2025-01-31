@@ -56,9 +56,9 @@ pipeline{
                     ).trim()
                     
                     sh "echo role defs fetched"
-                    def roleDefId1 = roleDefinitionIds[0].roleDefinitionId
-                    def roleDefId2 = roleDefinitionIds[1].roleDefinitionId
-                    def roleDefId3 = roleDefinitionIds[2].roleDefinitionId
+                    def roleDefId1 = roleDefinitionIds[0]
+                    def roleDefId2 = roleDefinitionIds[1]
+                    def roleDefId3 = roleDefinitionIds[2]
                     sh "echo role defs assigned"
 
                     sh "echo  ${roleDefId1}"
