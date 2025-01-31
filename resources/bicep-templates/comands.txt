@@ -1,1 +1,20 @@
-az ad user create --display-name tony --password DevPlatters@123 --user-principal-name tony@madhurgupta004gmail.onmicrosoft.com --force-change-password-next-sign-in  false
+---------------- Create user --------
+az ad user create --display-name steve --password DevPlatters@123 --user-principal-name steve@madhurgupta004gmail.onmicrosoft.com --force-change-password-next-sign-in  false
+tony, peter, steve
+
+
+-------------- Create roles ----------
+az deployment sub create --location eastus --name dep1 --parameters roles.bicepparam
+
+
+--------------- Get deployment outputs ----------
+az deployment sub show -n deployment1 --query properties.outputs.roleDefinitionIds.value
+
+
+#!/bin/bash
+
+# Define a variable
+greeting="Hello, World!"
+
+# Use the variable
+echo $greeting
