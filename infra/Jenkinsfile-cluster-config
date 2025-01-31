@@ -50,7 +50,7 @@ pipeline{
             steps{
                 script{
                     sh """ 
-                    ids=$(az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value) \
+                    ids="$(az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value)" \
                     echo $ids \
                     """
                 }
