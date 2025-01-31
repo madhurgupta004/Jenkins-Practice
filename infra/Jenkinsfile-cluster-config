@@ -41,16 +41,23 @@ pipeline{
                     az deployment sub create \
                         --location "${params.DEPLOYMENT_REGION}" \
                         --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+                        --name "${params.ROLES_DEPLOYMENT_NAME}" \
                         --query "properties.outputs" \
                         --output json
                     """, returnStdout: true).trim()
 
-                    sh "echo ${deploymentOutput}"
+                    // sh "echo ${deploymentOutput}"
 
-                    // def outputs = readJSON text: deploymentOutput
-                    // env.ROLE_DEFINITION_ID_1 = outputs.roleDefinitionId[0].value
-                    // env.ROLE_DEFINITION_ID_2 = outputs.roleDefinitionId[1].value
-                    // env.ROLE_DEFINITION_ID_3 = outputs.roleDefinitionId[2].value
+                    def outputs = readJSON text: deploymentOutput
+                    env.ROLE_DEFINITION_ID_1 = outputs.roleDefinitionIds.value[0].roleDefinitionId
+                    env.ROLE_DEFINITION_ID_2 = outputs.roleDefinitionIds.value[1].roleDefinitionId
+                    env.ROLE_DEFINITION_ID_3 = outputs.roleDefinitionIds.value[2].roleDefinitionId
+
+                    sh """ #!/bin/bash
+                        echo "Role Definition Id 1: ${ROLE_DEFINITION_ID_1}" \
+                        echo "Role Definition Id 2: ${ROLE_DEFINITION_ID_2}" \
+                        echo "Role Definition Id 3: ${ROLE_DEFINITION_ID_3}"
+                    """
                 }
             }
         }
