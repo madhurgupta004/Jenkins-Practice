@@ -50,12 +50,12 @@ pipeline{
             steps{
                 script{
                     echo "Getting role definition ids"
-                    // def roleDefinitionIds = sh (
-                    //     script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
-                    //     returnStdout: true
-                    // ).trim()
-                    def temp = "Hello World"
-                    sh "echo ${temp}"
+                    def roleDefinitionIds = sh (
+                        script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
+                        returnStdout: true
+                    ).trim()
+                    // def temp = "Hello World"
+                    sh "echo ${roleDefinitionIds}"
                 }
             }
         }
