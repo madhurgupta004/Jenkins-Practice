@@ -57,6 +57,8 @@ pipeline{
 
                     env.roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
+                    sh "echo ${roleDefinitionIds}"
+                    sh "echo ${roleDefinitionIds[0]}"
                 }
             }
         }
@@ -65,9 +67,9 @@ pipeline{
                 script{
                     // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
 
-                    // def userRoleObjects = '[
+                    // def userRoleObjects = [
                     //     {
-                    //         "userId" : ${params.READ_ONLY_USER_ID},
+                    //         "userId" : "${params.READ_ONLY_USER_ID}",
                     //         "roleId" : "${env.roleDefinitionIds[0]}"
                     //     },
                     //     {
@@ -78,34 +80,14 @@ pipeline{
                     //         "userId" : "${params.READ_AND_DELETE_USER_ID}",
                     //         "roleId" : "${env.roleDefinitionIds[2]}"
                     //     }
-                    // ]'
-
-                    import groovy.json.JsonBuilder
-
-                    def userRoleObjects = new JsonBuilder()
-
-                    userRoleObjects {
-                        userRoleObjects {
-                            userId "${params.READ_ONLY_USER_ID}"
-                            roleId "${env.roleDefinitionIds[0]}"
-                        }
-                        userRoleObjects {
-                            userId "${params.READ_AND_EDIT_USER_ID}"
-                            roleId "${env.roleDefinitionIds[1]}"
-                        }
-                        userRoleObjects {
-                            userId "${params.READ_AND_DELETE_USER_ID}"
-                            roleId "${env.roleDefinitionIds[2]}"
-                        }
-                    }
-                    def jsonString = userRoleObjects.toPrettyString()
-                    sh '''
+                    // ]
+                    sh """
                     az deployment sub create \
                         --location "${params.DEPLOYMENT_REGION}" \
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
                         --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters userRoleObjects=${jsonString}  \
-                    '''
+                        --parameters userRoleObjects=[{"userId" : "${params.READ_ONLY_USER_ID}","roleId" : "${env.roleDefinitionIds[0]}"},{"userId" : "${params.READ_AND_EDIT_USER_ID}","roleId" : "${env.roleDefinitionIds[1]}"},{"userId" : "${params.READ_AND_DELETE_USER_ID}","roleId" : "${env.roleDefinitionIds[2]}"}] \
+                    """
 
                     sh "echo role assignments created"
                 }
