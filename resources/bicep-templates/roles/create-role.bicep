@@ -24,9 +24,14 @@ resource roleDefs 'Microsoft.Authorization/roleDefinitions@2022-04-01' = [
   }
 ]
 
-output roleDefinitionIds array = [
+output roleNames array = [
   for (role, i) in roles: {
     roleName: role.roleName
+  }
+]
+
+output roleDefinitionIds array = [
+  for (role, i) in roles: {
     roleDefinitionId: roleDefs[i].name
   }
 ]
