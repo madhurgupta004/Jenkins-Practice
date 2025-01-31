@@ -46,18 +46,18 @@ pipeline{
                         --output json
                     """, returnStdout: true).trim()
 
-                    // sh "echo ${deploymentOutput}"
+                    sh "echo ${deploymentOutput}"
 
                     // def outputs = readJSON text: deploymentOutput
-                    env.ROLE_DEFINITION_ID_1 = deploymentOutput.roleDefinitionIds.value[0].roleDefinitionId
-                    env.ROLE_DEFINITION_ID_2 = deploymentOutput.roleDefinitionIds.value[1].roleDefinitionId
-                    env.ROLE_DEFINITION_ID_3 = deploymentOutput.roleDefinitionIds.value[2].roleDefinitionId
+                    // env.ROLE_DEFINITION_ID_1 = deploymentOutput.roleDefinitionIds.value[0].roleDefinitionId
+                    // env.ROLE_DEFINITION_ID_2 = deploymentOutput.roleDefinitionIds.value[1].roleDefinitionId
+                    // env.ROLE_DEFINITION_ID_3 = deploymentOutput.roleDefinitionIds.value[2].roleDefinitionId
 
-                    sh """ #!/bin/bash
-                        echo "Role Definition Id 1: ${ROLE_DEFINITION_ID_1}" \
-                        echo "Role Definition Id 2: ${ROLE_DEFINITION_ID_2}" \
-                        echo "Role Definition Id 3: ${ROLE_DEFINITION_ID_3}"
-                    """
+                    // sh """ #!/bin/bash
+                    //     echo "Role Definition Id 1: ${ROLE_DEFINITION_ID_1}" \
+                    //     echo "Role Definition Id 2: ${ROLE_DEFINITION_ID_2}" \
+                    //     echo "Role Definition Id 3: ${ROLE_DEFINITION_ID_3}"
+                    // """
                 }
             }
         }
