@@ -54,8 +54,6 @@ pipeline{
                         script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
                         returnStdout: true
                     ).trim()
-
-                    // sh "echo ${roleDefinitionIds}"
                     
                     sh "echo role defs fetched"
 
@@ -65,6 +63,7 @@ pipeline{
                     def roleDefId3 = ids[2]
                     sh "echo role defs assigned"
 
+                    sh "echo  ${ids}"
                     sh "echo  ${roleDefId1}"
                     sh "echo  ${roleDefId2}"
                     sh "echo  ${roleDefId3}"
