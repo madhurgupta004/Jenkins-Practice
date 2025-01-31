@@ -65,7 +65,7 @@ pipeline{
                         --location "${params.DEPLOYMENT_REGION}" \
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
                         --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters roleDefinitionIds="${roleDefinitionIdsJSON}" \
+                        --parameters roleDefinitionIds=${roleDefinitionIdsJSON} \
                     """
 
                     sh "echo role assignments created"
