@@ -1,0 +1,5 @@
+az aks approuting enable --resource-group Implementation-Vnet --name myPrivateAKSCluster
+
+az aks approuting update --resource-group Implementation-Vnet --name myPrivateAKSCluster --nginx None
+
+az role assignment create --assignee f6c0b372-e99b-42f0-840c-6cf426fd803b --role "Network Contributor" --scope "/subscriptions/8c01f775-0496-43bc-a889-65565e670e05/resourceGroups/Implementation-Vnet/providers/Microsoft.Network/virtualNetworks/Vnet-1/subnets/default"
