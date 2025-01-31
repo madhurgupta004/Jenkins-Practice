@@ -55,7 +55,7 @@ pipeline{
                     //     returnStdout: true
                     // ).trim()
                     def temp = "Hello World"
-                    echo ${temp}
+                    sh "echo ${temp}"
                 }
             }
         }
