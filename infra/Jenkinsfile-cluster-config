@@ -34,18 +34,18 @@ pipeline{
                 }
             }
         }
-        stage('Create roles'){
-            steps{
-                script{
-                    sh """
-                    az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
-                        --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
-                        --name "${params.ROLES_DEPLOYMENT_NAME}" \
-                    """
-                }
-            }
-        }
+        // stage('Create roles'){
+        //     steps{
+        //         script{
+        //             sh """
+        //             az deployment sub create \
+        //                 --location "${params.DEPLOYMENT_REGION}" \
+        //                 --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+        //                 --name "${params.ROLES_DEPLOYMENT_NAME}" \
+        //             """
+        //         }
+        //     }
+        // }
         stage('Getting role definition ids'){
             steps{
                 script{
@@ -55,12 +55,14 @@ pipeline{
                         returnStdout: true
                     ).trim()
 
-                    sh "echo ${roleDefinitionIds}"
+                    // sh "echo ${roleDefinitionIds}"
                     
                     sh "echo role defs fetched"
-                    def roleDefId1 = roleDefinitionIds[0]
-                    def roleDefId2 = roleDefinitionIds[1]
-                    def roleDefId3 = roleDefinitionIds[2]
+
+                    def ids = readJSON text: roleDefinitionIds
+                    def roleDefId1 = ids[0]
+                    def roleDefId2 = ids[1]
+                    def roleDefId3 = ids[2]
                     sh "echo role defs assigned"
 
                     sh "echo  ${roleDefId1}"
