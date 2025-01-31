@@ -39,8 +39,8 @@ pipeline{
                 script{
                     def deploymentOutput = sh(script: '''
                     az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
-                        --parameters "${env.ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+                        --location "\${params.DEPLOYMENT_REGION}" \
+                        --parameters "\${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
                         --query "properties.outputs" \
                         --output json
                     ''', returnStdout: true).trim()
