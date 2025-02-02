@@ -59,8 +59,8 @@ pipeline{
                     def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
                     sh "echo ${roleDefinitionIds}"
-                    def indexex = [0, 1, 2]
-                    indexes.each { index ->
+                    def temp = [0, 1, 2]
+                    temp.each { index ->
                         echo "${userIds[index]} : ${roleDefinitionIds[index]}"
                     }
 
