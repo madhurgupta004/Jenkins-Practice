@@ -34,18 +34,18 @@ pipeline{
                 }
             }
         }
-        // stage('Create roles'){
-        //     steps{
-        //         script{
-        //             sh """
-        //             az deployment sub create \
-        //                 --location "${params.DEPLOYMENT_REGION}" \
-        //                 --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
-        //                 --name "${params.ROLES_DEPLOYMENT_NAME}" \
-        //             """
-        //         }
-        //     }
-        // }
+        stage('Create roles'){
+            steps{
+                script{
+                    sh """
+                    az deployment sub create \
+                        --location "${params.DEPLOYMENT_REGION}" \
+                        --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
+                        --name "${params.ROLES_DEPLOYMENT_NAME}" \
+                    """
+                }
+            }
+        }
         stage('Fetching role definition ids'){
             steps{
                 script{
