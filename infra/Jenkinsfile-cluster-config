@@ -59,14 +59,17 @@ pipeline{
                     def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
                     sh "echo ${roleDefinitionIds}"
+                    roleDefinitionIds.each { value ->
+                        echo "${value}"
+                    }
 
-                    sh """
-                    az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
-                        --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
-                        --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters roleDefinitionIds=${roleDefinitionIdsJSON} \
-                    """
+                    // sh """
+                    // az deployment sub create \
+                    //     --location "${params.DEPLOYMENT_REGION}" \
+                    //     --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
+                    //     --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
+                    //     --parameters roleDefinitionIds="${roleDefinitionIdsJSON}" \
+                    // """
 
                     sh "echo role assignments created"
 
