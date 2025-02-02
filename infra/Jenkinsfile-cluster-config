@@ -50,7 +50,7 @@ pipeline{
             steps{
                 script{
                     echo "Getting role definition ids"
-                    def env.roleDefinitionIdsJSON = sh (
+                    env.roleDefinitionIdsJSON = sh (
                         script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
                         returnStdout: true
                     ).trim()
