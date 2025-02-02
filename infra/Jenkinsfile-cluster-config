@@ -68,7 +68,7 @@ pipeline{
                         --location "${params.DEPLOYMENT_REGION}" \
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
                         --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-                        --parameters userPrincipalId="${userIds[index]}" roleDefinitionId="${roleDefinitionIds[index]}" \
+                        --parameters userPrincipalId=${userIds[index]} roleDefinitionId=${roleDefinitionIds[index]} \
                         """
                     }
 
