@@ -62,6 +62,7 @@ pipeline{
                     def indexex = [0, 1, 2]
                     indexes.each { index ->
                         echo "${userIds[index]} : ${roleDefinitionIds[index]}"
+                    }
 
                         // sh """
                         // az deployment sub create \
@@ -70,7 +71,6 @@ pipeline{
                         // --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
                         // --parameters userPrincipalId=${userIds[index]} roleDefinitionId=${roleDefinitionIds[index]} \
                         // """
-                    }
 
                     sh "echo role assignments created"
 
