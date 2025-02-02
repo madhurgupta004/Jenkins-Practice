@@ -49,20 +49,23 @@ pipeline{
         stage('Fetching role definition ids'){
             steps{
                 script{
-                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
                     echo "Getting role definition ids"
-                    def roleDefinitionIdsJSON = sh (
+                    def env.roleDefinitionIdsJSON = sh (
                         script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
                         returnStdout: true
                     ).trim()
 
-                    def roleDefinitionIds = readJSON text: roleDefinitionIdsJSON
                     sh "echo role defs fetched"
-                    sh "echo ${roleDefinitionIds}"
+                }
+            }
+        }
+        stage('Create role assignment'){
+            steps {
+                script{
+                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
+                    def roleDefinitionIds = readJSON text: env.roleDefinitionIdsJSON
                     def temp = [0, 1, 2]
                     temp.each { index ->
-                        echo "${userIds[index]} : ${roleDefinitionIds[index]}"
-
                         sh """
                         az deployment sub create \
                         --location "${params.DEPLOYMENT_REGION}" \
@@ -71,44 +74,10 @@ pipeline{
                         --parameters userPrincipalId=${userIds[index]} roleDefinitionId=${roleDefinitionIds[index]} \
                         """
                     }
-
                     sh "echo role assignments created"
-
-                        // --parameters roleDefinitionIds=["${roleDefinitionIds[0]}", "${roleDefinitionIds[1]}", "${roleDefinitionIds[2]}"] \
                 }
             }
         }
-        // stage('Create role assignments'){
-        //     steps{
-        //         script{
-        //             // def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
-
-        //             // def userRoleObjects = [
-        //             //     {
-        //             //         "userId" : "${params.READ_ONLY_USER_ID}",
-        //             //         "roleId" : "${env.roleDefinitionIds[0]}"
-        //             //     },
-        //             //     {
-        //             //         "userId" : "${params.READ_AND_EDIT_USER_ID}",
-        //             //         "roleId" : "${env.roleDefinitionIds[1]}"
-        //             //     },
-        //             //     {
-        //             //         "userId" : "${params.READ_AND_DELETE_USER_ID}",
-        //             //         "roleId" : "${env.roleDefinitionIds[2]}"
-        //             //     }
-        //             // ]
-        //             sh """
-        //             az deployment sub create \
-        //                 --location "${params.DEPLOYMENT_REGION}" \
-        //                 --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
-        //                 --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
-        //                 --parameters userRoleObjects=[{"userId" : "${params.READ_ONLY_USER_ID}","roleId" : "${env.roleDefinitionIds[0]}"},{"userId" : "${params.READ_AND_EDIT_USER_ID}","roleId" : "${env.roleDefinitionIds[1]}"},{"userId" : "${params.READ_AND_DELETE_USER_ID}","roleId" : "${env.roleDefinitionIds[2]}"}] \
-        //             """
-
-        //             sh "echo role assignments created"
-        //         }
-        //     }
-        // }
         stage("Logout from Azure"){
             steps{
                 script{
