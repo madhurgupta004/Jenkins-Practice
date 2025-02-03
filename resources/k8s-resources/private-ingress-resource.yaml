@@ -8,19 +8,19 @@ metadata:
 spec:
   ingressClassName: nginx-internal
   rules:
-  - http:
-      paths:
-      - backend:
-          service:
-            name: temp-service
-            port:
-              number: 80 
-        path: /
-        pathType: Prefix
-      - backend:
-          service:
-            name: temp-service
-            port:
-              number: 80 
-        path: /demo
-        pathType: Prefix
+    - http:
+        paths:
+          - backend:
+              service:
+                name: temp-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+          - backend:
+              service:
+                name: temp-service
+                port:
+                  number: 80
+            path: /demo
+            pathType: Prefix

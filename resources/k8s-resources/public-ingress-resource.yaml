@@ -8,20 +8,19 @@ metadata:
 spec:
   ingressClassName: nginx-public
   rules:
-  # - host: <Hostname>
-  - http:
-      paths:
-      - backend:
-          service:
-            name: temp2-service
-            port:
-              number: 80
-        path: /temp2
-        pathType: Prefix
-      - backend:
-          service:
-            name: temp3-service
-            port:
-              number: 80
-        path: /temp3
-        pathType: Prefix
+    - http:
+        paths:
+          - backend:
+              service:
+                name: temp2-service
+                port:
+                  number: 80
+            path: /temp2
+            pathType: Prefix
+          - backend:
+              service:
+                name: temp3-service
+                port:
+                  number: 80
+            path: /temp3
+            pathType: Prefix

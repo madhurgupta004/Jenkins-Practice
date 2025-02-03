@@ -24,8 +24,6 @@ kind: Service
 metadata:
   name: temp-service
   namespace: private-resources
-  # annotations:
-  #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
 spec:
   selector:
     app: app-blue
