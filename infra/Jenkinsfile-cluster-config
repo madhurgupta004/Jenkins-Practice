@@ -1,22 +1,25 @@
 pipeline {
     agent any 
     parameters{
-        string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184')
+        string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184'),
+        string(name: 'GIT_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
+        string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/madhurgupta004/Jenkins-Practice.git'
-            }
-        }
         stage('SSH into VM') {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
-                            whoami
+                            whoami \
+                            rm -rf Repo \
+                            mkdir Repo \
+                            cd Repo \
+                            git clone ${GIT_URL} \
+                            cd ${PATH_TO_K8_RESOURCES} \
+                            cat commands.txt
                             ''' 
                             whoami
                             """

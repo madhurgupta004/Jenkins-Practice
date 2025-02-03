@@ -13,11 +13,11 @@ pipeline{
         ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/create-role-assignment.bicep'
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/madhurgupta004/Jenkins-Practice.git'
-            }
-        }
+        // stage('Checkout') {
+        //     steps {
+        //         git branch: 'main', url: 'https://github.com/madhurgupta004/Jenkins-Practice.git'
+        //     }
+        // }
         stage('Login to Azure') {
             steps {
                 script {
