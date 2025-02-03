@@ -15,7 +15,9 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh """
-                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  "mkdir demo"
+                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} 
+
+                            echo "Hello from Jenkins"
                             """
                         }
                 }
