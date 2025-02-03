@@ -17,11 +17,10 @@ pipeline {
                             rm -rf Repo \
                             mkdir Repo \
                             cd Repo \
-                            git clone ${GIT_URL} \
-                            cd ${PATH_TO_K8_RESOURCES} \
-                            cat commands.txt
+                            git clone ${params.GIT_URL} \
+                            cd ${params.PATH_TO_K8_RESOURCES} \
+                            cat commands.txt \
                             ''' 
-                            whoami
                             """
                         }
                 }
