@@ -1,7 +1,7 @@
 pipeline {
     agent any 
     parameters{
-        string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184'),
+        string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184')
         string(name: 'GIT_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
     }
