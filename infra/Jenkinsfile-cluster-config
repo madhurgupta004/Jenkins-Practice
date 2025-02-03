@@ -15,7 +15,7 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh '''
-                            ssh -i $SSH_KEY_FILE $SSH_USER@$VM_IP"mkdir demo"
+                            ssh -i $SSH_KEY_FILE $SSH_USER@$VM_IP "mkdir demo"
                             '''
                         }
                 }
