@@ -17,8 +17,8 @@ pipeline {
                             git clone ${params.GIT_REPO_URL} ;
                             cd ${params.GIT_REPO_NAME} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
-                            kubectl version ;
-                            kubectl get all -A;
+                            az login ; 
+                            az account show ;
                             cd .. ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             ''' 
