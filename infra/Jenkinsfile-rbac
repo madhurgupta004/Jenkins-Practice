@@ -8,7 +8,7 @@ pipeline{
         string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)')
         string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
     }
-    environment{
+    environment {
         ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
         ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/create-role-assignment.bicep'
     }
