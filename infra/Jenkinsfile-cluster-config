@@ -13,13 +13,13 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
-                            whoami \
-                            rm -rf Repo \
-                            mkdir Repo \
-                            cd Repo \
-                            git clone ${params.GIT_URL} \
-                            cd ${params.PATH_TO_K8_RESOURCES} \
-                            cat commands.txt \
+                            whoami ;
+                            rm -rf Repo ;
+                            mkdir Repo ;
+                            cd Repo ;
+                            git clone ${params.GIT_URL} ;
+                            cd ${params.PATH_TO_K8_RESOURCES} ;
+                            cat commands.txt ;
                             ''' 
                             """
                         }
