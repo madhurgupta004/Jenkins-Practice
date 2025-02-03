@@ -14,13 +14,15 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
+                            az login -u rahul@madhurgupta004gmail.onmicrosoft.com -p DevPlatters@123 ; 
+                            az aks get-credentials --resource-group Implementation-Vnet --name myPrivateAKSCluster --overwrite-existing ;
+                            kubelogin convert-kubeconfig -l azurecli ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
-                            cd ${params.GIT_REPO_NAME} ;
-                            cd ${params.PATH_TO_K8_RESOURCES} ;
-                            az login -u rahul@madhurgupta004gmail.onmicrosoft.com -p DevPlatters@123 ; 
-                            az account show ;
-                            cd .. ;
+                            cd ${params.GIT_REPO_NAME}/${params.PATH_TO_K8_RESOURCES} ;
+                            kubectl get all -A ;
+                            kubectl apply -f .
+                            cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             ''' 
                             """
