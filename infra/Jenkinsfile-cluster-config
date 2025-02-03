@@ -2,26 +2,25 @@ pipeline {
     agent any 
     parameters{
         string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184')
-        string(name: 'GIT_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
-        string(name: 'REPO_NAME', description: 'Name of the repository', defaultValue: 'Jenkins-Practice')
+        string(name: 'GIT_REPO_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
+        string(name: 'GIT_REPO_NAME', description: 'Name of the repository', defaultValue: 'Jenkins-Practice')
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
     }
 
     stages {
-        stage('SSH into VM') {
+        stage('SSH into VM and deploy resources') {
             steps {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
-                            whoami ;
-                            rm -rf Repo ;
-                            mkdir Repo ;
-                            cd Repo ;
-                            git clone ${params.GIT_URL} ;
-                            cd ${params.REPO_NAME} ;
+                            git clone ${params.GIT_REPO_URL} ;
+                            cd ${params.GIT_REPO_NAME} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
-                            cat commands.txt ;
+                            kubectl version ;
+                            kubectl get all -A;
+                            cd .. ;
+                            rm -rf ${params.GIT_REPO_NAME} ;
                             ''' 
                             """
                         }
