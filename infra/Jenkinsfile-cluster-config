@@ -3,6 +3,7 @@ pipeline {
     parameters{
         string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184')
         string(name: 'GIT_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
+        string(name: 'REPO_NAME', description: 'Name of the repository', defaultValue: 'Jenkins-Practice')
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
     }
 
@@ -18,6 +19,7 @@ pipeline {
                             mkdir Repo ;
                             cd Repo ;
                             git clone ${params.GIT_URL} ;
+                            cd ${params.REPO_NAME} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
                             cat commands.txt ;
                             ''' 
