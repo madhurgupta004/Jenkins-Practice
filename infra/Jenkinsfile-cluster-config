@@ -3,7 +3,8 @@ pipeline {
     parameters{
         string(name: 'VM_IP', description: 'Public IP adress of the VM to SSH', defaultValue: '40.76.124.107')
         string(name: 'GIT_REPO_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
-        string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'Jenkins-Practice/resources/k8s-resources')
+        string(name: 'GIT_REPO_NAME', description: 'Name of the git repository', defaultValue: 'Jenkins-Practice')
+        string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
         string(name: 'RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
         string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'manual-testing-cluster')
     }
