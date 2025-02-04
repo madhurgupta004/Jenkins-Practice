@@ -15,7 +15,10 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER'), 
                     usernamePassword(credentialsId: 'CLUSTER_ADMIN_USER', passwordVariable: 'ADMIN_PASSWORD', usernameVariable: 'ADMIN_USERNAME')]) {
                             sh """
-                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  "whoami"
+                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
+                            whoami ;
+                            whoami ;
+                            '''
                             """
                         }
                 }
