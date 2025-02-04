@@ -22,14 +22,19 @@ pipeline {
                             az login -u ${ADMIN_USERNAME} -p ${ADMIN_PASSWORD} ; 
                             az aks get-credentials --resource-group ${CLUSTER_RG_NAME} --name ${CLUSTER_NAME} --overwrite-existing ;
                             kubelogin convert-kubeconfig -l azurecli ;
-                            rm -rf ${params.GIT_REPO_NAME} ;
                             az extension add --name aks-preview ;
                             az extension update --name aks-preview ;
                             az aks approuting enable --resource-group ${CLUSTER_RG_NAME} --name ${CLUSTER_NAME} --nginx None ;
+                            kubectl get nginxIngressControllers ;
+                            rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
                             kubectl create namespace public-resources ;
                             kubectl create namespace private-resources ;
+                            export IP=${PUBLIC_IP_NAME} ;
+                            export RG=${CLUSTER_RESOURCES_RG_NAME} ;
+                            envsubst < nginx-public-controller.yaml | kubectl apply -f -
+                            kubectl apply -f nginx-internal-controller.yaml private-ingress-resource.yaml public-ingress-resource.yaml temorary-service.yaml temp-service2.yaml temp3.yaml ;
                             kubectl get all -A ;
                             cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
