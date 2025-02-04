@@ -28,7 +28,7 @@ pipeline {
                             kubectl get nginxIngressControllers ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
-                            cd ${paramas.GIT_REPO_NAME}
+                            cd ${params.GIT_REPO_NAME}
                             cd ${params.PATH_TO_K8_RESOURCES} ;
                             kubectl create namespace public-resources ;
                             kubectl create namespace private-resources ;
