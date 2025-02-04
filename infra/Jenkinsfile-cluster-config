@@ -23,7 +23,7 @@ pipeline {
                             rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
-                            az aks approuting enable --resource-group ${RG_NAME} --name ${CLUSTER_NAME}
+                            az aks approuting enable --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --nginx None ;
                             kubectl get all -A ;
                             cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
