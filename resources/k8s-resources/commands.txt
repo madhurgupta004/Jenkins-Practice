@@ -3,3 +3,12 @@ az aks approuting enable --resource-group Implementation-Vnet --name myPrivateAK
 az aks approuting update --resource-group Implementation-Vnet --name myPrivateAKSCluster --nginx None
 
 az role assignment create --assignee f6c0b372-e99b-42f0-840c-6cf426fd803b --role "Network Contributor" --scope "/subscriptions/8c01f775-0496-43bc-a889-65565e670e05/resourceGroups/Implementation-Vnet/providers/Microsoft.Network/virtualNetworks/Vnet-1/subnets/default"
+
+
+------------ Dynamically pass ip name and rg name "
+
+  export IP=b13b377d-975f-4734-8dfc-f110f8d140d6
+  export RG=MC_Implementation-Vnet_myPrivateAKSCluster_eastus
+  echo $IP
+  echo $RG
+  envsubst < nginx-public-controller.yaml | kubectl apply -f -

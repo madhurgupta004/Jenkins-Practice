@@ -2,8 +2,9 @@ apiVersion: approuting.kubernetes.azure.com/v1alpha1
 kind: NginxIngressController
 metadata:
   name: nginx-public
-  annotations:
-    service.beta.kubernetes.io/azure-load-balancer-ipv4: $PUBLIC_IP
 spec:
   ingressClassName: nginx-public
   controllerNamePrefix: nginx-public
+  loadBalancerAnnotations:
+    service.beta.kubernetes.io/azure-pip-name: $IP
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: $RG

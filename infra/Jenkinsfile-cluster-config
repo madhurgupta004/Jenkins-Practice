@@ -1,25 +1,35 @@
 pipeline {
     agent any 
     parameters{
-        string(name: 'VM_IP', description: 'Public IP adress of the VM', defaultValue: '48.217.64.184')
+        string(name: 'VM_IP', description: 'Public IP adress of the VM to SSH', defaultValue: '40.76.124.107')
         string(name: 'GIT_REPO_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
-        string(name: 'GIT_REPO_NAME', description: 'Name of the repository', defaultValue: 'Jenkins-Practice')
-        string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
+        string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'Jenkins-Practice/resources/k8s-resources')
+        string(name: 'RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
+        string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'manual-testing-cluster')
     }
 
     stages {
         stage('SSH into VM and deploy resources') {
             steps {
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER'), 
+                    usernamePassword(credentialsId: 'CLUSTER_ADMIN_USER', passwordVariable: 'ADMIN_PASSWORD', usernameVariable: 'ADMIN_USERNAME')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
-                            az login -u rahul@madhurgupta004gmail.onmicrosoft.com -p DevPlatters@123 ; 
-                            az aks get-credentials --resource-group Implementation-Vnet --name myPrivateAKSCluster --overwrite-existing ;
+                            sudo apt-get update ;
+                            sudo apt-get upgrade -Y ;
+                            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash ;
+                            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" ;
+                            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl ;
+                            sudo az aks install-cli ;
+
+                            az login -u ${ADMIN_USERNAME} -p ${ADMIN_PASSWORD} ; 
+                            az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --overwrite-existing ;
                             kubelogin convert-kubeconfig -l azurecli ;
+
                             rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
-                            cd ${params.GIT_REPO_NAME}/${params.PATH_TO_K8_RESOURCES} ;
+                            cd ${params.PATH_TO_K8_RESOURCES} ;
                             kubectl get all -A ;
                             kubectl apply -f .
                             cd ../../../ ;
