@@ -17,7 +17,7 @@ pipeline {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
                             sudo apt-get update ;
-                            sudo apt-get upgrade ;
+                            sudo apt-get upgrade -y;
                             '''
                             """
                         }
