@@ -16,8 +16,8 @@ pipeline {
                     usernamePassword(credentialsId: 'CLUSTER_ADMIN_USER', passwordVariable: 'ADMIN_PASSWORD', usernameVariable: 'ADMIN_USERNAME')]) {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
-                            whoami ;
-                            whoami ;
+                            sudo apt-get update ;
+                            sudo apt-get upgrade -Y ;
                             '''
                             """
                         }
