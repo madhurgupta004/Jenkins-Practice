@@ -35,7 +35,7 @@ pipeline {
                             export IP=${PUBLIC_IP_NAME} ;
                             export RG=${CLUSTER_RESOURCES_RG_NAME} ;
                             envsubst < nginx-public-controller.yaml | kubectl apply -f -
-                            kubectl apply -f nginx-internal-controller.yaml -f private-ingress-resource.yaml -f public-ingress-resource.yaml -f temorary-service.yaml -f temp-service2.yaml -f temp3.yaml ;
+                            kubectl apply -f nginx-internal-controller.yaml -f private-ingress-resource.yaml -f public-ingress-resource.yaml -f resources-private.yaml -f resources-public.yaml ;
                             kubectl get all -A ;
                             cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
