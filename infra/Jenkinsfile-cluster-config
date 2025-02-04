@@ -7,7 +7,7 @@ pipeline {
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
         string(name: 'CLUSTER_RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
         string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'manual-testing-cluster')
-        string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '2d944702-cbf7-4500-831f-1ddd96382440')
+        string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '49e71c3e-a0a3-4141-af67-2dfb75878b77')
         string(name: 'CLUSTER_RESOURCES_RG_NAME', description: 'Resource Group of cluster resources', defaultValue: 'MC_manual-testing-RG_manual-testing-cluster_eastus')
     }
 
@@ -28,6 +28,7 @@ pipeline {
                             kubectl get nginxIngressControllers ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             git clone ${params.GIT_REPO_URL} ;
+                            cd ${paramas.GIT_REPO_NAME}
                             cd ${params.PATH_TO_K8_RESOURCES} ;
                             kubectl create namespace public-resources ;
                             kubectl create namespace private-resources ;
