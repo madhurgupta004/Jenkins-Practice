@@ -15,26 +15,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER'), 
                     usernamePassword(credentialsId: 'CLUSTER_ADMIN_USER', passwordVariable: 'ADMIN_PASSWORD', usernameVariable: 'ADMIN_USERNAME')]) {
                             sh """
-                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP} '''
-                            sudo apt-get update ;
-                            sudo apt-get upgrade -Y ;
-                            curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash ;
-                            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" ;
-                            sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl ;
-                            sudo az aks install-cli ;
-
-                            az login -u ${ADMIN_USERNAME} -p ${ADMIN_PASSWORD} ; 
-                            az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --overwrite-existing ;
-                            kubelogin convert-kubeconfig -l azurecli ;
-
-                            rm -rf ${params.GIT_REPO_NAME} ;
-                            git clone ${params.GIT_REPO_URL} ;
-                            cd ${params.PATH_TO_K8_RESOURCES} ;
-                            kubectl get all -A ;
-                            kubectl apply -f . ;
-                            cd ../../../ ;
-                            rm -rf ${params.GIT_REPO_NAME} ;
-                            ''' 
+                            ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  "whoami"
                             """
                         }
                 }
