@@ -12,15 +12,22 @@ spec:
         paths:
           - backend:
               service:
-                name: temp2-service
+                name: public-jenkins
                 port:
                   number: 80
-            path: /temp2
+            path: /jenkins
             pathType: Prefix
           - backend:
               service:
-                name: temp3-service
+                name: public-nginx
                 port:
                   number: 80
-            path: /temp3
+            path: /nginx
+            pathType: Prefix
+          - backend:
+              service:
+                name: public-caddy
+                port:
+                  number: 80
+            path: /caddy
             pathType: Prefix

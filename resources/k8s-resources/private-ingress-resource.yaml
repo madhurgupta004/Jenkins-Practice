@@ -12,15 +12,15 @@ spec:
         paths:
           - backend:
               service:
-                name: temp-service
+                name: private-jenkins
                 port:
                   number: 80
-            path: /
+            path: /jenkins
             pathType: Prefix
           - backend:
               service:
-                name: temp-service
+                name: private-nginx
                 port:
                   number: 80
-            path: /demo
+            path: /nginx
             pathType: Prefix
