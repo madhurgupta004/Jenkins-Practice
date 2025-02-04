@@ -5,8 +5,10 @@ pipeline {
         string(name: 'GIT_REPO_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
         string(name: 'GIT_REPO_NAME', description: 'Name of the git repository', defaultValue: 'Jenkins-Practice')
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
-        string(name: 'RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
+        string(name: 'CLUSTER_RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
         string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'manual-testing-cluster')
+        string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '2d944702-cbf7-4500-831f-1ddd96382440')
+        string(name: 'CLUSTER_RESOURCES_RG_NAME', description: 'Resource Group of cluster resources', defaultValue: 'MC_manual-testing-RG_manual-testing-cluster_eastus')
     }
 
     stages {
@@ -18,12 +20,16 @@ pipeline {
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
                             az login -u ${ADMIN_USERNAME} -p ${ADMIN_PASSWORD} ; 
-                            az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --overwrite-existing ;
+                            az aks get-credentials --resource-group ${RG_NAME} --name ${CLUSTER_RG_NAME} --overwrite-existing ;
                             kubelogin convert-kubeconfig -l azurecli ;
                             rm -rf ${params.GIT_REPO_NAME} ;
+                            az extension add --name aks-preview ;
+                            az extension update --name aks-preview ;
+                            az aks approuting enable --resource-group ${RG_NAME} --name ${CLUSTER_RG_NAME} --nginx None ;
                             git clone ${params.GIT_REPO_URL} ;
                             cd ${params.PATH_TO_K8_RESOURCES} ;
-                            az aks approuting enable --resource-group ${RG_NAME} --name ${CLUSTER_NAME} --nginx None ;
+                            kubectl create namespace public-resources ;
+                            kubectl create namespace private-resources ;
                             kubectl get all -A ;
                             cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
