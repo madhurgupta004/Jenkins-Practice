@@ -4,7 +4,7 @@ metadata:
   name: public-jenkins
   namespace: public-resources
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: public-jenkins
