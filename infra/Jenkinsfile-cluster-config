@@ -1,14 +1,14 @@
 pipeline {
     agent any 
     parameters{
-        string(name: 'VM_IP', description: 'Public IP adress of the VM to SSH', defaultValue: '172.172.143.129')
+        string(name: 'VM_IP', description: 'Public IP adress of the VM to SSH', defaultValue: '4.188.79.226')
         string(name: 'GIT_REPO_URL', description: 'URL of the git repository', defaultValue: 'https://github.com/madhurgupta004/Jenkins-Practice.git')
         string(name: 'GIT_REPO_NAME', description: 'Name of the git repository', defaultValue: 'Jenkins-Practice')
         string(name: 'PATH_TO_K8_RESOURCES', description: 'Path to the k8 resources', defaultValue: 'resources/k8s-resources')
-        string(name: 'CLUSTER_RG_NAME', description: 'Resource Group of cluster', defaultValue: 'azure-for-students-westus-dev-aks-rg')
-        string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'azure-for-students-westus-dev-aks')
-        string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '816c1443-1915-49ee-9e22-f5bedccdbb17')
-        string(name: 'CLUSTER_RESOURCES_RG_NAME', description: 'Resource Group of cluster resources', defaultValue: 'MC_azure-for-students-westus-dev-aks-rg_azure-for-students-westus-dev-aks_westus')
+        string(name: 'CLUSTER_RG_NAME', description: 'Resource Group of cluster', defaultValue: 'manual-testing-RG')
+        string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'manual-testing-cluster')
+        string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '65ea7451-01e6-4426-80b1-eb1c5072e45a')
+        string(name: 'CLUSTER_RESOURCES_RG_NAME', description: 'Resource Group of cluster resources', defaultValue: 'MC_manual-testing-RG_manual-testing-cluster_centralindia')
     }
 
     stages {
