@@ -4,7 +4,7 @@ metadata:
   name: private-jenkins
   namespace: private-resources
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: private-jenkins
