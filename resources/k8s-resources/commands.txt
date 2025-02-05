@@ -12,3 +12,6 @@ az role assignment create --assignee f6c0b372-e99b-42f0-840c-6cf426fd803b --role
   echo $IP
   echo $RG
   envsubst < nginx-public-controller.yaml | kubectl apply -f -
+
+
+  kubectl apply -f nginx-internal-controller.yaml -f private-ingress-resource.yaml -f public-ingress-resource.yaml -f resources-private.yaml -f resources-public.yaml ;

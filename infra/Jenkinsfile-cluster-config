@@ -34,8 +34,7 @@ pipeline {
                             kubectl create namespace private-resources ;
                             export IP=${PUBLIC_IP_NAME} ;
                             export RG=${CLUSTER_RESOURCES_RG_NAME} ;
-                            envsubst < nginx-public-controller.yaml | kubectl apply -f -
-                            kubectl apply -f nginx-internal-controller.yaml -f private-ingress-resource.yaml -f public-ingress-resource.yaml -f resources-private.yaml -f resources-public.yaml ;
+                            envsubst < . | kubectl apply -f - ;
                             kubectl get all -A ;
                             cd ../../../ ;
                             rm -rf ${params.GIT_REPO_NAME} ;
