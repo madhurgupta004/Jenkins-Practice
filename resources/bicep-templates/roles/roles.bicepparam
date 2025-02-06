@@ -1,7 +1,7 @@
 using 'create-role.bicep'
 var SUBSCRIPTION_NAME = 'azure-for-students'
-var ENVIRONMENT: 'dev'
-var RESOURCES_REGION: 'westus'
+var ENVIRONMENT = 'dev'
+var RESOURCES_REGION = 'westus'
 var PREFIX = '${SUBSCRIPTION_NAME}-${RESOURCES_REGION}-${ENVIRONMENT}'
 param roles = [
   {
