@@ -4,20 +4,15 @@ pipeline{
         string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments')
         string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles')
         string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed')
-        string(name: 'READ_ONLY_USER_ID', defaultValue: 'f0d23ab5-4a22-478a-940b-2a6a74be51b4', description: 'PrincipalId of the user which should have read only access on cluster (Tony)')
-        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: 'a52c5eaf-4d91-49cf-9e32-b2b77dc77a2b', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)')
-        string(name: 'READ_AND_DELETE_USER_ID', defaultValue: '437ea3e4-2a82-466d-aeb8-ab57a5463387', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
+        string(name: 'READ_ONLY_USER_ID', defaultValue: 'df7282a9-997e-4412-9d24-cb9ebac4f7fb', description: 'PrincipalId of the user which should have read only access on cluster (Tony)')
+        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: '019199e9-7afe-40a4-8b63-82643d90c7e2', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)')
+        string(name: 'READ_AND_DELETE_USER_ID', defaultValue: 'b651bd65-ed0c-4db3-a802-106b5b7ffba0', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
     }
     environment {
         ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
         ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/create-role-assignment.bicep'
     }
     stages {
-        // stage('Checkout') {
-        //     steps {
-        //         git branch: 'main', url: 'https://github.com/madhurgupta004/Jenkins-Practice.git'
-        //     }
-        // }
         stage('Login to Azure') {
             steps {
                 script {
@@ -87,12 +82,4 @@ pipeline{
         }
         
     }
-    post {
-        success {
-            echo 'Bicep deployment completed successfully!'
-        }
-        failure {
-            echo 'Bicep deployment failed. Check the logs for details.'
-        }
-        }
 }

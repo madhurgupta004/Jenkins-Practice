@@ -9,6 +9,8 @@ pipeline {
         string(name: 'CLUSTER_NAME', description: 'Name of the cluster', defaultValue: 'azure-for-students-westus-dev-aks')
         string(name: 'PUBLIC_IP_NAME', description: 'Name of the public IP for public ingress', defaultValue: '816c1443-1915-49ee-9e22-f5bedccdbb17')
         string(name: 'CLUSTER_RESOURCES_RG_NAME', description: 'Resource Group of cluster resources', defaultValue: 'MC_azure-for-students-westus-dev-aks-rg_azure-for-students-westus-dev-aks_westus')
+        string(name: 'SUBSCRIPTION_ID', description: 'Subscription ID of azure account', defaultValue: '82103d68-e454-42a4-acbf-1b71e64bca29')
+        // string(name: 'CLUSTER_MANAGED_IDENTITY_ID', description: 'Managed Identity ID of the cluster')
     }
 
     stages {
@@ -17,6 +19,10 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: 'SSH_CREDENTIALS', keyFileVariable: 'SSH_KEY_FILE', usernameVariable: 'SSH_USER'), 
                     usernamePassword(credentialsId: 'CLUSTER_ADMIN_USER', passwordVariable: 'ADMIN_PASSWORD', usernameVariable: 'ADMIN_USERNAME')]) {
+                            // az role assignment create --assignee ${params.CLUSTER_MANAGED_IDENTITY_ID} --role "Network Contributer" --scope "/subscriptions/${params.SUBSCRIPTION_ID}/resourceGroups/${params.CLUSTER_RG_NAME}/providers/Microsoft.Network/virtualNetworks/${params.}/subnets"
+                            sh """
+                            az role assignment create --assignee ${params.ADMIN_USERNAME} --role "Azure Kubernetes Service RBAC Cluster Admin" --scope "/subscriptions/${params.SUBSCRIPTION_ID}/resourceGroups/${params.CLUSTER_RG_NAME}/providers/Microsoft.ContainerService/managedClusters/${params.CLUSTER_NAME}"
+                            """
                             sh """
                             ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
                             az login -u ${ADMIN_USERNAME} -p ${ADMIN_PASSWORD} ; 
@@ -37,7 +43,7 @@ pipeline {
                             envsubst < nginx-public-controller.yaml | kubectl apply -f - ;
                             kubectl apply -f nginx-internal-controller.yaml -f private-ingress-resource.yaml -f public-ingress-resource.yaml -f resources-private.yaml -f resources-public.yaml ;
                             kubectl get all -A ;
-                            cd ../../../ ;
+                            cd ;
                             rm -rf ${params.GIT_REPO_NAME} ;
                             '''
                             """
