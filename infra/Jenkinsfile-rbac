@@ -3,10 +3,6 @@ pipeline{
     parameters {
         string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments')
         string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles')
-        string(name: 'DEPLOYMENT_REGION', defaultValue: 'eastus', description: 'Region where the resources will be deployed')
-        string(name: 'READ_ONLY_USER_ID', defaultValue: 'df7282a9-997e-4412-9d24-cb9ebac4f7fb', description: 'PrincipalId of the user which should have read only access on cluster (Tony)')
-        string(name: 'READ_AND_EDIT_USER_ID', defaultValue: '019199e9-7afe-40a4-8b63-82643d90c7e2', description: 'PrincipalId of the user which should have read and edit access on cluster (Peter)')
-        string(name: 'READ_AND_DELETE_USER_ID', defaultValue: 'b651bd65-ed0c-4db3-a802-106b5b7ffba0', description: 'PrincipalId of the user which should have read and delete access on cluster (Steve)')
     }
     environment {
         ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
@@ -23,8 +19,8 @@ pipeline{
                         clientSecretVariable: 'AZURE_CLIENT_SECRET',
                         tenantIdVariable: 'AZURE_TENANT_ID'
                         )]){
-                        sh "az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID"
-                        sh "az account set --subscription $AZURE_SUBSCRIPTION_ID"
+                        sh "az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} -t ${AZURE_TENANT_ID}"
+                        sh "az account set --subscription ${AZURE_SUBSCRIPTION_ID}"
                         }
                 }
             }
@@ -32,11 +28,12 @@ pipeline{
         stage('Create roles'){
             steps{
                 script{
+                    def config = readYaml file: './infra/config.yaml'
                     sh """
                     az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
+                        --location "${config.RESOURCES_REGION}" \
                         --parameters "${ROLE_BICEPPARAM_TEMPLATE_PATH}" \
-                        --name "${params.ROLES_DEPLOYMENT_NAME}" \
+                        --name "${config.ENVIRONMENT}-roles-deployment" \
                     """
                 }
             }
@@ -44,9 +41,10 @@ pipeline{
         stage('Fetching role definition ids'){
             steps{
                 script{
+                    def config = readYaml file: './infra/config.yaml'
                     echo "Getting role definition ids"
                     env.roleDefinitionIdsJSON = sh (
-                        script: "az deployment sub show --name ${params.ROLES_DEPLOYMENT_NAME} --query properties.outputs.roleDefinitionIds.value --output json",
+                        script: "az deployment sub show --name ${config.ENVIRONMENT}-roles-deployment --query properties.outputs.roleDefinitionIds.value --output json",
                         returnStdout: true
                     ).trim()
 
@@ -57,15 +55,16 @@ pipeline{
         stage('Create role assignment'){
             steps {
                 script{
-                    def userIds = [params.READ_ONLY_USER_ID, params.READ_AND_EDIT_USER_ID, params.READ_AND_DELETE_USER_ID]
+                    def config = readYaml file: './infra/config.yaml'
+                    def userIds = [config.READ_ONLY_USER_ID, config.READ_AND_EDIT_USER_ID, config.READ_AND_DELETE_USER_ID]
                     def roleDefinitionIds = readJSON text: env.roleDefinitionIdsJSON
                     def temp = [0, 1, 2]
                     temp.each { index ->
                         sh """
                         az deployment sub create \
-                        --location "${params.DEPLOYMENT_REGION}" \
+                        --location "${config.RESOURCES_REGION}" \
                         --template-file "${ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH}" \
-                        --name "${params.ROLE_ASSIGNMENTS_DEPLOYMENT_NAME}" \
+                        --name "${config.ENVIRONMENT}-role-assignments-deployment" \
                         --parameters userPrincipalId=${userIds[index]} roleDefinitionId=${roleDefinitionIds[index]} \
                         """
                     }
