@@ -25,7 +25,7 @@ pipeline {
                         tenantIdVariable: 'AZURE_TENANT_ID'
                         ) 
                     ]) {
-                        def sid = "$AZURE_SUBSCRIPTION_ID"
+                        def sid = "82103d68-e454-42a4-acbf-1b71e64bca29"
                         sh "echo $AZURE_SUBSCRIPTION_ID"
                         sh "echo /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/${prefix}-aks-rg/providers/Microsoft.ContainerService/managedClusters/${prefix}-aks"
                         sh """
