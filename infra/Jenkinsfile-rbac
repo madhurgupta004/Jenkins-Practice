@@ -1,9 +1,5 @@
 pipeline{
     agent any
-    parameters {
-        string(name: 'ROLE_ASSIGNMENTS_DEPLOYMENT_NAME', defaultValue: 'role-assignments-deployment', description: 'Name of the deployment for role assignments')
-        string(name: 'ROLES_DEPLOYMENT_NAME', defaultValue: 'roles-deployment', description: 'Name of the deployment for roles')
-    }
     environment {
         ROLE_BICEPPARAM_TEMPLATE_PATH = 'resources/bicep-templates/roles/roles.bicepparam'
         ROLE_ASSIGNMENTS_BICEP_TEMPLATE_PATH = 'resources/bicep-templates/role-assignments/create-role-assignment.bicep'
