@@ -6,8 +6,7 @@ pipeline {
     }
 
     stages {
-        stage('SSH into VM and deploy resource
-        s') {
+        stage('SSH into VM and deploy resources') {
             steps {
                 script {
                     def config = readYaml file: './infra/config.yaml'
