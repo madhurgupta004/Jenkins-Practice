@@ -1,0 +1,5 @@
+GIT_REPO_URL: "https://github.com/madhurgupta004/Jenkins-Practice.git"
+SUBSCRIPTION_NAME: "azure-for-students"
+SUBSCRIPTION_ID: "82103d68-e454-42a4-acbf-1b71e64bca29"
+ENVIRONMENT: "dev"
+RESOURCES_REGION: "westus"
