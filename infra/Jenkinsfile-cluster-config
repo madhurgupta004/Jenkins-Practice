@@ -25,18 +25,15 @@ pipeline {
                         tenantIdVariable: 'AZURE_TENANT_ID'
                         ) 
                     ]) {
-                        env.sid = "82103d68-e454-42a4-acbf-1b71e64bca29"
-                        sh "echo $AZURE_SUBSCRIPTION_ID"
-                        sh "echo /subscriptions/$AZURE_SUBSCRIPTION_ID/resourceGroups/${prefix}-aks-rg/providers/Microsoft.ContainerService/managedClusters/${prefix}-aks"
                         sh """
-                        az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID 
-                        az account set --subscription "${sid}" 
-                        az role assignment create --assignee "${AZURE_CLIENT_ID}" --role "Azure Kubernetes Service RBAC Cluster Admin" --scope "/subscriptions/${sid}/resourceGroups/${prefix}-aks-rg/providers/Microsoft.ContainerService/managedClusters/${prefix}-aks"
+                        az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} -t ${AZURE_TENANT_ID} 
+                        az account set --subscription "${AZURE_SUBSCRIPTION_ID}" 
+                        az role assignment create --assignee "${AZURE_CLIENT_ID}" --role "Azure Kubernetes Service RBAC Cluster Admin" --scope "/subscriptions/${AZURE_SUBSCRIPTION_ID}/resourceGroups/${prefix}-aks-rg/providers/Microsoft.ContainerService/managedClusters/${prefix}-aks"
                         """
                         sh """
                         ssh -o StrictHostKeyChecking=no -i ${SSH_KEY_FILE} ${SSH_USER}@${params.VM_IP}  '''
                         az login --service-principal -u ${AZURE_CLIENT_ID} -p ${AZURE_CLIENT_SECRET} -t ${AZURE_TENANT_ID} ; 
-                        az account set --subscription $AZURE_SUBSCRIPTION_ID ;
+                        az account set --subscription ${AZURE_SUBSCRIPTION_ID} ;
                         az aks get-credentials --resource-group ${prefix}-aks-rg --name ${prefix}-aks --overwrite-existing ;
                         kubelogin convert-kubeconfig -l azurecli ;
                         az extension add --name aks-preview ;
