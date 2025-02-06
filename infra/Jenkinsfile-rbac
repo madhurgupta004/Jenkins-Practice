@@ -52,7 +52,7 @@ pipeline{
             steps {
                 script{
                     def config = readYaml file: './infra/config.yaml'
-                    def userIds = [config.READ_ONLY_USER_ID, config.READ_AND_EDIT_USER_ID, config.READ_AND_DELETE_USER_ID]
+                    def userIds = [config.READ_ONLY_USER_PRINCIPAL_ID, config.READ_AND_EDIT_USER_PRINCIPAL_ID, config.READ_AND_DELETE_USER_PRINCIPAL_ID]
                     def roleDefinitionIds = readJSON text: env.roleDefinitionIdsJSON
                     def temp = [0, 1, 2]
                     temp.each { index ->
