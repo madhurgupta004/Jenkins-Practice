@@ -25,6 +25,10 @@ node {
     stage('Prepare File') {
         // The uploaded file is named 'INPUT_FILE' in the workspace
         // Move it to 'input.txt' for consistency with the Python script
+        sh """
+        pwd; 
+        ls;
+        """
         if (fileExists('INPUT_FILE')) {
             sh 'mv INPUT_FILE input.txt'
         } else {
