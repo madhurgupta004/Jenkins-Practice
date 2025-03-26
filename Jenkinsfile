@@ -10,8 +10,8 @@ pipeline {
                     
                     withFileParameter('CODEOWNER') {
                         sh"""
-                        
                         echo $CODEOWNER
+                        python run.py --file $CODEOWNER
                         """
                     }
                 }
