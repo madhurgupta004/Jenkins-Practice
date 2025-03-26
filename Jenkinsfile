@@ -31,7 +31,7 @@ node {
         ls;
         """
         if (fileExists(fileName)) {
-            sh 'mv ${fileName} input.txt'
+            sh "mv ${fileName} input.txt"
         } else {
             error "Uploaded file 'INPUT_FILE' not found in workspace."
         }
