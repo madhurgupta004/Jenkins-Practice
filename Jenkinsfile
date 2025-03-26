@@ -29,7 +29,7 @@ node {
         pwd; 
         ls;
         """
-        if (fileExists('INPUT_FILE')) {
+        if (fileExists('temp.txt')) {
             sh 'mv INPUT_FILE input.txt'
         } else {
             error "Uploaded file 'INPUT_FILE' not found in workspace."
