@@ -1,51 +1,52 @@
 import hudson.model.FileParameterDefinition
 
-// Define the file parameter programmatically
+// Define the file parameter with the correct constructor
 properties([
     parameters([
         new FileParameterDefinition(
-            'INPUT_FILE',           // Parameter name
-            'input.txt',            // File location in the workspace
+            'INPUT_FILE',           // Parameter name (also the default file name in workspace)
             'Upload your input file here'  // Description
         )
     ])
 ])
 
 node {
-    // Define Python command (adjust if needed, e.g., 'python3')
-    def pythonCmd = 'python'
-    def pythonFileName = 'run.py'
+    def pythonCmd = 'python'  // Adjust to 'python3' if needed
 
     stage('Setup Environment') {
         try {
-            // Verify Python is available
             sh "${pythonCmd} --version"
         } catch (Exception e) {
-            echo "Python not found or misconfigured: ${e.message}"
-            error "Please ensure Python is installed on the agent (e.g., 'sudo apt install python3')"
+            echo "Python not found: ${e.message}"
+            error "Install Python on the agent (e.g., 'sudo apt install python3')"
+        }
+    }
+
+    stage('Prepare File') {
+        // The uploaded file is named 'INPUT_FILE' in the workspace
+        // Move it to 'input.txt' for consistency with the Python script
+        if (fileExists('INPUT_FILE')) {
+            sh 'mv INPUT_FILE input.txt'
+        } else {
+            error "Uploaded file 'INPUT_FILE' not found in workspace."
         }
     }
 
     stage('Run Python Script') {
         try {
-            // Ensure the Python script exists (assumes it's in the repo)
-            if (!fileExists(pythonFileName)) {
-                error "Python script ${pythonFileName} not found in workspace. Please add it to your repository."
+            if (!fileExists('process_file.py')) {
+                error "Python script 'process_file.py' not found."
             }
-
-            // Run the Python script with the file path
-            def result = sh(script: "${pythonCmd} ${pythonFileName} --file input.txt", returnStatus: true)
-            
-            // Check the script's exit code
+            def result = sh(script: "${pythonCmd} process_file.py --file input.txt", returnStatus: true)
             if (result != 0) {
-                echo "Python script indicated a failure (e.g., empty file)."
+                echo "Python script failed (e.g., empty file)."
                 currentBuild.result = 'FAILURE'
-                error "Build failed due to Python script exit code: ${result}"
+                error "Build failed with exit code: ${result}"
             } else {
                 echo "Python script executed successfully."
             }
         } catch (Exception e) {
-            echo "Error during execution: ${e.message}"
+            echo "Error: ${e.message}"
             currentBuild.result = 'FAILURE'
             throw e
         }
