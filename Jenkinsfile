@@ -25,12 +25,13 @@ node {
     stage('Prepare File') {
         // The uploaded file is named 'INPUT_FILE' in the workspace
         // Move it to 'input.txt' for consistency with the Python script
+        def fileName = 'file.txt'
         sh """
         pwd; 
         ls;
         """
-        if (fileExists('temp.txt')) {
-            sh 'mv INPUT_FILE input.txt'
+        if (fileExists(fileName)) {
+            sh 'mv ${fileName} input.txt'
         } else {
             error "Uploaded file 'INPUT_FILE' not found in workspace."
         }
